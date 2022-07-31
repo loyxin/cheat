@@ -1,0 +1,39 @@
+# Include the directory {/usr/include/myPersonnal/lib/} to the list of path for #include <....>
+# With this option, no warning / error will be reported for the files in {/usr/include/myPersonnal/lib/}
+gcc -isystem /usr/include/myPersonnal/lib/
+
+-S 表示仅仅汇编而不进行编译及链接。也就是将源代码翻译成汇编指令。gcc -S生成的文件阅读起来不如用objdump反编译.o文件生成的结果舒服。建议想分析汇编指令采用objdump命令反编译。
+-E 表示仅仅对代码进行预处理不编译。
+-c 表示仅仅汇编及编译代码，不进行链接。也就是将源代码编译成.o文件
+-o filename 指明输出文件名。一般配合-E -c -S三个命令使用。
+-I dirname 指示预处理器把dirname加入到include文件搜索路径里来
+-include filename 在源文件前面包含filename作为头文件
+-save-temps
+.i .o .s
+
+-w 关闭所有告警提示
+-Wall 虽然是-Wall但是不是打开所有告警提示而是大部分，但下面的-W开头的告警需要单独打开。
+Convert warnings into errors with -Werror option
+-Werror
+-W 对某些告警显示更详细的信息
+-Wfloat-equal 浮点数直接使用==判断是否相等时告警
+-Wshadow 对shadow变量进行告警。比如：
+ 有个全局变量nCount，这时你写的函数有个参数也叫nCount。编译器就会告警提示你，说局部参数nCount起作用而全局nCount不起作用。如果你用意不是如此就需要修改代码了。
+
+gcc -DMACRONAME=MACRODEF 或者 gcc -DMACRONAME
+这样就定义了预处理宏，编译的时候可选代码就会被编译进去了。
+-Dmacro=string，等价于在头文件中定义：#define macro string。
+-DTRUE=true，等价于在头文件中定义：#define TRUE true
+-Dmacro，等价于在头文件中定义：#define macro 1，实际上也达到了定义：#define macro的目的。
+-DLINUX，等价于：#define LINUX 1（与#define LINUX作用类似）。
+–define-macro macro=string与-Dmacro=string作用相同。
+
+Create position independent code using -fPIC option
+gcc -c -Wall -Werror -fPIC Cfile.c
+gcc -shared -o libCfile.so Cfile.o
+
+gcc -c -Q -march=native --help=target | grep march
+gcc -v -E -x c /dev/null -o /dev/null -march=native 2>&1 | grep /cc1
+
+unset LIBRARY_PATH CPATH C_INCLUDE_PATH PKG_CONFIG_PATH CPLUS_INCLUDE_PATH INCLUDE
+

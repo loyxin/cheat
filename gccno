@@ -1,0 +1,242 @@
+-march
+-fforce-mem
+ -fforce-addr
+ 强制在运算前将内存中的数值 (mem) 或内存位置 (addr) 复制到缓存器中。启动这两个选项可以做出较好的程序代码。
+
+其中 -fforce-mem 已在 -O2, -O3, -Os 中启动，所以若您有用这三个选项的其中一个，只要 -fforce-addr 就够了。
+
+开启
+
+-fomit-frame-pointer   
+
+若非必要，不将函式的 frame pointer 放进缓存器中。这将避免您的程序储存、设定、以及还原 frame pointer；也在许多函式中省下一个缓存器。这个选项可能让某些平台上的除错工作变成不可能！。若平台支持不使用 frame pointer 除错，这个选项将在 -O, -O2, -O3, -Os 中启动。   
+o 很抱歉，x86 刚好是非这个不可才能除错的平台之一。但是... 您想对您的桌面进行除错吗？若答案为非，您可以放心启动这个选项。
+
+开启
+
+-finline-functions, -fno-inline-functions   
+            o 将所有简单的函式整合进呼叫他们的函式中。编译器会自动试探并决定那些函式值得被整合。于 -O3 时启动。   
+o 虽然这个选项会增加程序大小，但是他却是个增进效能的好东西。我建议您在这里启动它，然后使用下面一个指令指定 inline 条件。    
+* -finline-limit   
+            o -finline-limit=n   
+            o n 为决定函式是否能被 inline 的伪指令长度。预设的值为 600。   
+o 这个数值越小，程序启动的速度越快，但是运算的速度越慢。作为桌面使用，我建议 -finline-limit=400。
+-fmove-all-movables   
+        -freduce-all-givs   
+            o -fmove-all-movables, -fno-move-all-moveables   
+              -freduce-all-givs, -fno-redduse-all-givs   
+            o 这两个是循环最佳化技术，将无关循环内容的运算改在循环外执行。编译出的执行档可能更快也可能更慢，结果跟程序的写法有很大的关系。   
+o 虽然说效能跟程序写法有关，但是大部份的状况下这两个选项会做出比较小与比较快的程序代码，所以我建议您启动他们！    
+
+-fmove-loop-invariants 改为这个
+
+* -freorder-blocks   
+        -freorder-functions   
+            o -freorder-blocks, -fno-reorder-blocks   
+              -freorder-functions, -fno-reorder-functions   
+            o 藉由重新编排程序区块来增进效能以及减少执行档大小。   
+o 这两个也是好东西，所以我建议您启动它们。缺点是会让编译时间变长。
+
+
+-fexpensive-optimizations   
+            o -fexpensive-optimizations, -fno-expensive-optimizations   
+            o 执行几个会加长编译时间的非主要最佳化程序。于 -O2, -O3, -Os 中预设开启。   
+o 虽然会增加编译时间，但是能增加效能也能减少执行档大小，所以建议启用。
+
+ -frename-registers   
+            o -frename-registers, -fno-rename-registers   
+            o 在作过缓存器定位之后，使用剩下来的缓存器。这个最佳化在有很多缓存器的 CPU 上最明显 (如 ARM、PowerPC... 等。x86 不属于他们的一份子)。会增加除错的困难度。  
+o 虽然在 x86 上不明显，但是还是有用。而且 x86-64 提供更多的缓存器，所以建议您还是应该打开它。    
+* -fweb   
+            o -fweb, -fno-web   
+            o 建立经常使用的缓存器网络。提供更佳的缓存器使用率。不过也会增加除错的困难度。   
+o 这个是安全选项中比较偏向实验性质的选项，虽然建议您启动，但是若启动之后程序不稳，请将它关闭。 于 -O3 时启动。
+
+
+ -ffast-math   
+            o -ffast-math, -fno-fast-math   
+   o 设定 -fno-math-errno, -funsafe-math-optimizations, -fno-trapping-math, -ffinite-math-only, -fno-rounding-math, 以及 -fno-signaling-nans 这几个选项，以及设定预先处理器的 __FAST_MATH__ 宏。这些技术虽然较快，但是违反 IEEE 或 ISO 的规则，并且很有可能让程序算出错误的数值。   
+o 这是危险的东西，可能造成运算结果的错误 (1.1+1.2=1.4！？当然没那么离谱啦...)，建议不使用。    
+* -funit-at-a-time   
+            o -funit-at-a-time, -fno-unit-at-a-time   
+            o 在制作执行文件前分析整个编译单位。提供某些额外最佳化套用的机会，但会使用更多内存。   
+o 这个东西还蛮安全的，请放心使用它！    
+* -funroll-loops   
+        -fold-unroll-loops   
+            o -funroll-loops, -fno-unroll-loops   
+              -fold-unroll-loops, -fno-old-unroll-loops   
+            o 展开可以在编译阶段决定次数的循环，可能让程序执行的更快或更慢。-fold-unroll-loops 使用旧的算法。   
+o 由于这个会让程序变大许多，所以建议不使用。    
+* -funroll-all-loops   
+        -fold-unroll-all-loops   
+            o -funroll-all-loops, -fno-unroll-all-loops   
+              -fold-unroll-all-loops, -fno-old-unroll-all-loops   
+            o 即使循环执行次数不确定，还是将所有循环展开。大部份状况下会让程序跑得更慢。   
+o 又比较慢又会变大，所以别用...    
+      * -fprefetch-loop-arrays   
+            o -fprefetch-loop-arrays, -fno-prefetch-loop-arrays   
+            o 若目标机器支持，在存取大型数组循环执行之前预先将数组加载至内存。于 -Os 中关闭。   
+o 其实不太会有需要存取大型数组的循环 (多媒体、数据库、科学计算软件中才比较常见)，所以您可以放心将此选项关闭。    
+* -ffunction-sections   
+        -fdata-sections   
+            o -ffunction-sections, -fno-function-sections   
+              -fdata-sections, -fno-data-sections   
+            o 将函式或资料物品放至自己的区段中。大部份使用 ELF 目标格式的系统以及执行 Solaris 2 的 SPARC 系统支持这些最佳化。会增加连结过程的时间，以及增加执行档大小，也会增加除错的困难。   
+o 在我的经验中，没有特别显著的效果，而且执行档会变大，所以建议不使用。    
+* -fbranch-target-load-optimize   
+        -fbranch-target-load-optimize2   
+            o -fbranch-target-load-optimize, -fno-branch-target-load-optimize   
+              -fbranch-target-load-optimize2, -fno-branch-target-load-optimize2   
+            o 在执行序启动以及结尾之前执行枝节目标缓存器加载最佳化。   
+o 这是进阶最佳化选项，建议您两个都启动。    
+
+
+
+依照不同的目标处理器进行最佳化。注意，若您指定了 -march，制作出的执行档将无法在其它 CPU 上使用。但是若光指定 -mtune，gcc 会避免使用平台专有指令集跟专用排程选项。可用的选项有：   
+
+
+-mfpmath   
+            o -mfpmath=unit   
+            o 依照选择的单位制作执行文件。可用的单位有：   
++ 387：使用标准的 387 浮点运算处理单元，为 i386 默认值。   
++ sse：使用 SSE 指令集提供的浮点运算处理指令，可以透过 -msse 或 -msse2 来启用。在 x86-64 平台上，这个选项是预设启用的。   
++ sse,387：使用标准 387 浮点运算处理单元与 SSE 指令集，这将提供将近一倍的额外缓存器，以及可能增加浮点运算处理效能。小心使用这个选项，因为这个技术还处于实验性质，可能造成系统不稳。    
+o 若您使用支持 SSE 的处理器，可以尝试使用比较快的 -mfpmath=sse,387。若您比较胆小 (怕当机)，可以使用 -mfpmath=sse。    
+* -mmmx   
+        -msse   
+        -msse2   
+        -msse3   
+        -m3dnow   
+            o -mmmx, -mno-mmx   
+              -msse, -mno-sse   
+              -msse2, -mno-sse2   
+              -msse3, -mno-sse3   
+              -m3dnow, -mno-3dnow   
+            o 启动或关闭指令集支持。   
+o 请依照您的系统启动或关闭这些指令集支持。有关处理器支持的指令集，可透过 cat /proc/cpuinfo 来查询。    
+* -maccumulate-outgoing-args   
+            o -maccumulate-outgoing-args, -mno-accumulate-outgoing-args   
+            o 在函式起始时，计算输出参数所需的空间。在大部份现代处理器上，由于降低依存性、增进排程、以及在堆栈分界不等于 2 的时候降低堆栈使用率，这个选项可以增加一些效能。缺点是执行档会变大。   
+o 由于执行档会变大，所以不太建议使用。    
+* -malign-stringops   
+            o -malign-stringops, -mno-align-stringops   
+            o 决定是否将整合进原始码的目标字符串操作数对齐。这可以缩小执行档大小，以及在目标字符串操作数已经对齐时增加一些效能。   
+o 两面刃，所以请自己决定...    
+      * -minline-all-stringops   
+            o -minline-all-stringops, -mno-inline-all-stringops   
+            o 预设中 GCC 只将知道目的地会被对齐在 4bytes 界线的字符串操作数整合进程序代码。这个选项启动更多的整合，增加执行档大小，不过可能会增加需要快速 memcpy, strlen 以及 memset 的程序。   
+o 由于会增加程序代码大小，而又不是那么多程序会使用 memcpy/strlen/memset 等函式，所以建议不使用。    
+
+
+
+大部份参数前面若加上 `no’，表示关闭该参数。如 -fforce-mem 开启 force-mem，-fno-force-mem 将 force-mem 关闭。
+
+gcc -mtune=skylake -march=skylake --param l1-cache-size=32 --param l1-cache-line-size=64 --param l2-cache-size=8192 -fomit-frame-pointer -finline-functions -finline-limit=800 -fmove-loop-invariants -freorder-blocks -funswitch-loops -frename-registers -fweb -ffunction-sections -fdata-sections -fbranch-target-load-optimize2 -O2 sample.c -o sample.o
+
+-O和-O1： 对程序做部分编译优化，对于大函数,优化编译占用稍微多的时间和相当大的内存。使用本项优化，编译器会尝试减小生成代码的尺寸，以及缩短执行时间，但并不执行需要占用大量编译时间的优化。 
+
+打开的优化选项： 
+
+l -fdefer-pop：延迟栈的弹出时间。当完成一个函数调用，参数并不马上从栈中弹出，而是在多个函数被调用后，一次性弹出。 
+
+l -fmerge-constants：尝试横跨编译单元合并同样的常量(string constants and floating point constants) 
+
+l -fthread-jumps：如果某个跳转分支的目的地存在另一个条件比较,而且该条件比较包含在前一个比较语句之内,那么执行本项优化.根据条件是true或者false,前面那条分支重定向到第二条分支的目的地或者紧跟在第二条分支后面. 
+
+l -floop-optimize：执行循环优化,将常量表达式从循环中移除，简化判断循环的条件，并且optionally do strength-reduction，或者将循环打开等。在大型复杂的循环中，这种优化比较显著。 
+
+l -fif-conversion：尝试将条件跳转转换为等价的无分支型式。优化实现方式包括条件移动，min，max，设置标志，以及abs指令，以及一些算术技巧等。  
+
+l -fif-conversion2基本意义相同，没有找到更多的解释。 
+
+l -fdelayed-branch：这种技术试图根据指令周期时间重新安排指令。 它还试图把尽可能多的指令移动到条件分支前, 以便最充分的利用处理器的治理缓存。 
+
+l -fguess-branch-probability：当没有可用的profiling feedback或__builtin_expect时，编译器采用随机模式猜测分支被执行的可能性，并移动对应汇编代码的位置，这有可能导致不同的编译器会编译出迥然不同的目标代码。 
+
+l -fcprop-registers：因为在函数中把寄存器分配给变量, 所以编译器执行第二次检查以便减少调度依赖性(两个段要求使用相同的寄存器)并且删除不必要的寄存器复制操作。 
+
+-O2： 是比O1更高级的选项，进行更多的优化。Gcc将执行几乎所有的不包含时间和空间折中的优化。当设置O2选项时，编译器并不进行循环打开（）loop unrolling以及函数内联。与O1比较而言，O2优化增加了编译时间的基础上，提高了生成代码的执行效率。 
+
+O2打开所有的O1选项，并打开以下选项： 
+
+l -fforce-mem：在做算术操作前，强制将内存数据copy到寄存器中以后再执行。这会使所有的内存引用潜在的共同表达式，进而产出更高效的代码，当没有共同的子表达式时，指令合并将排出个别的寄存器载入。这种优化对于只涉及单一指令的变量, 这样也许不会有很大的优化效果. 但是对于再很多指令(必须数学操作)中都涉及到的变量来说, 这会时很显著的优化, 因为和访问内存中的值相比 ,处理器访问寄存器中的值要快的多。 
+
+l -foptimize-sibling-calls：优化相关的以及末尾递归的调用。通常, 递归的函数调用可以被展开为一系列一般的指令， 而不是使用分支。 这样处理器的指令缓存能够加载展开的指令并且处理他们, 和指令保持为需要分支操作的单独函数调用相比, 这样更快。 
+
+l -fstrength-reduce：这种优化技术对循环执行优化并且删除迭代变量。 迭代变量是捆绑到循环计数器的变量, 比如使用变量, 然后使用循环计数器变量执行数学操作的for-next循环。 
+
+l -fcse-follow-jumps：在公用子表达式消元时，当目标跳转不会被其他路径可达，则扫描整个的跳转表达式。例如，当公用子表达式消元时遇到if...else...语句时，当条为false时，那么公用子表达式消元会跟随着跳转。   
+
+l -fcse-skip-blocks：与-fcse-follow-jumps类似，不同的是，根据特定条件，跟随着cse跳转的会是整个的blocks 
+
+l -frerun-cse-after-loop：在循环优化完成后，重新进行公用子表达式消元操作。 
+
+l -frerun-loop-opt：两次运行循环优化 l -fgcse：执行全局公用子表达式消除pass。这个pass还执行全局常量和copy propagation。这些优化操作试图分析生成的汇编语言代码并且结合通用片段， 消除冗余的代码段。如果代码使用计算性的goto, gcc指令推荐使用-fno-gcse选项。 
+
+l-fgcse-lm：全局公用子表达式消除将试图移动那些仅仅被自身存储kill的装载操作的位置。这将允许将循环内的load/store操作序列中的load转移到循环的外面（只需要装载一次），而在循环内改变成copy/store序列。在选中-fgcse后，默认打开。 
+
+l -fgcse-sm：当一个存储操作pass在一个全局公用子表达式消除的后面，这个pass将试图将store操作转移到循环外面去。如果与-fgcse-lm配合使用，那么load/store操作将会转变为在循环前load，在循环后store，从而提高运行效率，减少不必要的操作。 
+
+l -fgcse-las：全局公用子表达式消除pass将消除在store后面的不必要的load操作，这些load与store通常是同一块存储单元（全部或局部） 
+
+l-fdelete-null-pointer-checks：通过对全局数据流的分析，识别并排出无用的对空指针的检查。编译器假设间接引用空指针将停止程序。 如果在间接引用之后检查指针，它就不可能为空。 
+
+l -fexpensive-optimizations：进行一些从编译的角度来说代价高昂的优化（这种优化据说对于程序执行未必有很大的好处，甚至有可能降低执行效率，具体不是很清楚） 
+
+l -fregmove：编译器试图重新分配move指令或者其他类似操作数等简单指令的寄存器数目，以便最大化的捆绑寄存器的数目。这种优化尤其对双操作数指令的机器帮助较大。 
+
+l -fschedule-insns：编译器尝试重新排列指令，用以消除由于等待未准备好的数据而产生的延迟。这种优化将对慢浮点运算的机器以及需要load memory的指令的执行有所帮助，因为此时允许其他指令执行，直到load memory的指令完成，或浮点运算的指令再次需要cpu。 l 
+
+-fschedule-insns2：与-fschedule-insns相似。但是当寄存器分配完成后，会请求一个附加的指令计划pass。这种优化对寄存器较小，并且load memory操作时间大于一个时钟周期的机器有非常好的效果。 
+
+l -fsched-interblock：这种技术使编译器能够跨越指令块调度指令。 这可以非常灵活地移动指令以便等待期间完成的工作最大化。 
+
+l -fsched-spec-load：允许一些load指令进行一些投机性的动作。（具体不详）相同功能的还有-fsched-spec-load-dangerous，允许更多的load指令进行投机性操作。这两个选项在选中-fschedule-insns时默认打开。 
+
+l -fcaller-saves：通过存储和恢复call调用周围寄存器的方式，使被call调用的value可以被分配给寄存器，这种只会在看上去能产生更好的代码的时候才被使用。（如果调用多个函数, 这样能够节省时间, 因为只进行一次寄存器的保存和恢复操作, 而不是在每个函数调用中都进行。） 
+
+l -fpeephole2：允许计算机进行特定的观察孔优化(这个不晓得是什么意思)，-fpeephole与-fpeephole2的差别在于不同的编译器采用不同的方式，由的采用-fpeephole，有的采用-fpeephole2，也有两种都采用的。 
+
+l -freorder-blocks：在编译函数的时候重新安排基本的块，目的在于减少分支的个数，提高代码的局部性。 
+
+l -freorder-functions：在编译函数的时候重新安排基本的块，目的在于减少分支的个数，提高代码的局部性。这种优化的实施依赖特定的已存在的信息：.text.hot用于告知访问频率较高的函数，.text.unlikely用于告知基本不被执行的函数。 
+
+l -fstrict-aliasing：这种技术强制实行高级语言的严格变量规则。 对于c和c++程序来说, 它确保不在数据类型之间共享变量. 例如, 整数变量不和单精度浮点变量使用相同的内存位置。 
+
+l -funit-at-a-time：在代码生成前，先分析整个的汇编语言代码。这将使一些额外的优化得以执行，但是在编译器间需要消耗大量的内存。（有资料介绍说：这使编译器可以重新安排不消耗大量时间的代码以便优化指令缓存。） 
+
+l -falign-functions：这个选项用于使函数对准内存中特定边界的开始位置。 大多数处理器按照页面读取内存，并且确保全部函数代码位于单一内存页面内, 就不需要叫化代码所需的页面。 
+
+l -falign-jumps：对齐分支代码到2的n次方边界。在这种情况下，无需执行傀儡指令（dummy operations） 
+
+l -falign-loops：对齐循环到2的n次幂边界。期望可以对循环执行多次，用以补偿运行dummy operations所花费的时间。 
+
+l -falign-labels：对齐分支到2的n次幂边界。这种选项容易使代码速度变慢，原因是需要插入一些dummy operations当分支抵达usual flow of the code. 
+
+l -fcrossjumping：这是对跨越跳转的转换代码处理， 以便组合分散在程序各处的相同代码。 这样可以减少代码的长度， 但是也许不会对程序性能有直接影响。  
+
+-O3： 比O2更进一步的进行优化。
+
+在包含了O2所有的优化的基础上，又打开了以下优化选项： 
+
+l -finline-functions：内联简单的函数到被调用函数中。由编译器启发式的决定哪些函数足够简单可以做这种内联优化。默认情况下，编译器限制内联的尺寸，3.4.6中限制为600（具体含义不详，指令条数或代码size？）可以通过-finline-limit=n改变这个长度。这种优化技术不为函数创建单独的汇编语言代码， 而是把函数代码包含在调度程序的代码中。 对于多次被调用的函数来说, 为每次函数调用复制函数代码。 虽然这样对于减少代码长度不利, 但是通过最充分的利用指令缓存代码, 而不是在每次函数调用时进行分支操作, 可以提高性能。 
+
+l -fweb：构建用于保存变量的伪寄存器网络。 伪寄存器包含数据, 就像他们是寄存器一样, 但是可以使用各种其他优化技术进行优化, 比如cse和loop优化技术。这种优化会使得调试变得更加的不可能，因为变量不再存放于原本的寄存器中。 
+
+l -frename-registers：在寄存器分配后，通过使用registers left over来避免预定代码中的虚假依赖。这会使调试变得非常困难，因为变量不再存放于原本的寄存器中了。 
+
+l -funswitch-loops：将无变化的条件分支移出循环，取而代之的将结果副本放入循环中。 
+
+ -Os： 主要是对程序的尺寸进行优化。打开了大部分O2优化中不会增加程序大小的优化选项，并对程序代码的大小做更深层的优化。（通常我们不需要这种优化）Os会关闭如下选项： -falign-functions -falign-jumps -falign-loops  -falign-labels   -freorder-blocks   -fprefetch-loop-arrays  
+
+优化介绍小结 O0选项不进行任何优化，在这种情况下，编译器尽量的缩短编译消耗（时间，空间），此时，debug会产出和程序预期的结果。当程序运行被断点打断，此时程序内的各种声明是独立的，我们可以任意的给变量赋值，或者在函数体内把程序计数器指到其他语句,以及从源程序中 精确地获取你期待的结果. 
+
+O1优化会消耗少多的编译时间，它主要对代码的分支，常量以及表达式等进行优化。 
+
+O2会尝试更多的寄存器级的优化以及指令级的优化，它会在编译期间占用更多的内存和编译时间。 
+
+O3在O2的基础上进行更多的优化，例如使用伪寄存器网络，普通函数的内联，以及针对循环的更多优化。 
+
+Os主要是对代码大小的优化，我们基本不用做更多的关心。 通常各种优化都会打乱程序的结构，让调试工作变得无从着手。并且会打乱执行顺序，依赖内存操作顺序的程序需要做相关处理才能确保程序的正确性。  
+
+

@@ -1,0 +1,13 @@
+trans -s ja 手紙 -source (-s) option to specify the source language:
+trans :zh+ja word
+trans en:zh word processor
+
+Use the -play (-p) option to listen to the translation:
+trans -b -p :ja "Saluton, Mondo"
+Use the -speak (-sp) option to listen to the original text:
+trans -sp "你好，世界"
+
+trans -b -i input.txt :fr the -input (-i) option:
+
+Start an interactive shell using the -shell (or -interactive, -I) option:
+trans -shell

@@ -1,0 +1,4 @@
+# print the 5th item from a line (zero indexed)
+choose 5
+# print everything from the 2nd to 5th item on the line,
+choose 2:5

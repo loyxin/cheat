@@ -1,0 +1,11 @@
+# Move a file from one place to another but never overwrite anything
+# (This will override any previous -f or -i args)
+mv -n ~/Desktop/foo.txt ~/Documents/foo.txt
+
+# Move listed files to a directory
+mv -t ~/Desktop/ file1 file2 file3
+
+#要将所有以字母 “a” 开头的文件重命名为以字母 “b” 开头的
+mmv a\* b\#1
+mmv '*abc*' '#1xyz#2'
+

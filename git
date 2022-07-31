@@ -1,0 +1,53 @@
+# 哪些文件会被删除. 不会真正的删除文件, 提醒
+git clean -n
+
+# 删除当前目录下所有没有track过的文件. 他不会删除.gitignore文件里面指定的文件夹和文件, 不管这些文件有没有被track过
+git clean -f
+git clean -f <path>
+
+# 删除当前目录下没有被track过的文件和文件夹
+git clean -df
+
+# 删除当前目录下所有没有track过的文件. 不管他是否是.gitignore文件里面指定的文件夹和文件
+git clean -xf
+
+# To delete the branch "branch_name"
+git branch -D branch_name
+
+# To see who commited which line in a file
+git blame filename
+
+git fetch upstream                                      # Get branches
+git branch -va                                          # List local - remote branches
+git checkout master                                     # Checkout local master branch
+git checkout -b new_branch                              # Create and checkout a new branch
+git merge upstream/master                               # Merge remote into local repo
+git show 83fb499                                        # Show what a commit did.
+git show 83fb499:path/fo/file.ext                       # Shows the file as it appeared at 83fb499.
+git diff branch_1 branch_2                              # Check difference between branches
+
+# View changes that are new on a feature branch
+git log -p feature --not master
+git diff master...feature
+
+# This can be used to diff files that are not in a git repo!
+git diff --no-index path/to/file/A path/to/file/B
+
+# To pull changes while overwriting any local commits
+git fetch --all
+git reset --hard origin/master
+
+
+git fetch origin -q master:master
+git branch $new_br $commit : branching from $commit
+git cherry-pick A..B
+
+上面的命令可以转移从 A 到 B 的所有提交
+，提交 A 将不会包含在 Cherry pick 中。如果要包含提交 A，可以使用下面的语法。
+
+git cherry-pick A^..B
+
+git push origin refs/remotes/gogs/master:refs/heads/master
+
+source to destination
+git push --mirror origin
